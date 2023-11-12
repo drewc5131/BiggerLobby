@@ -337,13 +337,13 @@ namespace BiggerLobby.Patches
         {
             // What does this do? Why does it do? And why does my camera break when the 5th user joins?
             // I dont know! We don't document our code here!
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < Plugin.MaxPlayers; i++)
             {
                 __instance.radarTargets.Add(new TransformAndName(StartOfRound.Instance.allPlayerScripts[i].transform, StartOfRound.Instance.allPlayerScripts[i].playerUsername));
             }
-            __instance.targetTransformIndex = 0;
-            __instance.targetedPlayer = StartOfRound.Instance.allPlayerScripts[0];
-            return (false);
+            //__instance.targetTransformIndex = 0;
+            //__instance.targetedPlayer = StartOfRound.Instance.allPlayerScripts[0];
+            return false;
         }// I got a glock in my rari
 
         [HarmonyPatch(typeof(PlayerControllerB), "Awake")]
