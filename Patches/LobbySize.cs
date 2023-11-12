@@ -20,8 +20,7 @@ namespace BiggerLobby.Patches
         public static bool SkipLobbySizeCheck(ref GameNetworkManager __instance, ref bool __result, Lobby lobby) {
             string data = lobby.GetData("vers");
             string text = lobby.GetData("MaxPlayers");
-            int number;
-            if (!text.IsNullOrWhiteSpace() || !(int.TryParse(text, out number)))
+            if (!text.IsNullOrWhiteSpace() || !int.TryParse(text, out int number))
             {
                 number = 20;
             }

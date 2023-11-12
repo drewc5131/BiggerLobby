@@ -45,7 +45,7 @@ namespace BiggerLobby.Patches
         public static bool ResizeLists2(ref ForestGiantAI __instance)
         {
             __instance.playerStealthMeters = Helper.ResizeArray(__instance.playerStealthMeters, Plugin.MaxPlayers);
-            return(true);
+            return true;
         }
         [HarmonyPatch(typeof(HUDManager), "Awake")]
         [HarmonyPostfix]
@@ -81,7 +81,7 @@ namespace BiggerLobby.Patches
             RectTransform rt7 = p7.GetComponent(typeof(RectTransform)) as RectTransform;
             GameObject p8 = __instance.HostSettingsOptionsNormal.transform.Find("Private").gameObject;
             RectTransform rt8 = p8.GetComponent(typeof(RectTransform)) as RectTransform;
-            GameObject p9 = UnityEngine.Object.Instantiate(p4,p4.transform.parent);
+            GameObject p9 = UnityEngine.Object.Instantiate(p4, p4.transform.parent);
             RectTransform rt9 = p9.GetComponent(typeof(RectTransform)) as RectTransform;
             Debug.Log("yeah!!");
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, 200);
@@ -105,7 +105,7 @@ namespace BiggerLobby.Patches
         {
             if (GameNetworkManager.Instance.currentLobby == null)
             {
-                return (true);
+                return true;
             }
             GameObject SPF = __instance.HostSettingsOptionsNormal.transform.Find("ServerPlayersField").gameObject;
             Debug.Log(SPF);
@@ -115,22 +115,21 @@ namespace BiggerLobby.Patches
             Debug.Log(iTextMeshProUGUI);
             string text = Regex.Replace(iTextMeshProUGUI.text, "[^0-9]", "");
             Debug.Log(text);
-            int newnumber;
-            if (!(int.TryParse(text, out newnumber)))
+            if (!int.TryParse(text, out int newnumber))
             {
                 Debug.Log(newnumber);
                 newnumber = 20;
             }
-            newnumber = Math.Min(Math.Max(newnumber, 4),20);
+            newnumber = Math.Min(Math.Max(newnumber, 4), 20);
             Debug.Log(newnumber);
             Lobby lobby = GameNetworkManager.Instance.currentLobby ?? new Lobby();//fuck ittttt
             lobby.SetData("MaxPlayers", newnumber.ToString());
-            return (true);
+            return true;
 
         }
-        [HarmonyPatch(typeof(SteamLobbyManager),"LoadServerList")]
+        [HarmonyPatch(typeof(SteamLobbyManager), "LoadServerList")]
         [HarmonyPrefix]
-        public async static void LoadServerList(SteamLobbyManager __instance )
+        public async static void LoadServerList(SteamLobbyManager __instance)
         {
             Debug.Log("hai");
             if (GameNetworkManager.Instance.waitingForLobbyDataRefresh)
@@ -181,18 +180,17 @@ namespace BiggerLobby.Patches
                 {
                     __instance.serverListBlankText.text = "";
                 }
-                LP.SetValue(__instance,0f);
+                LP.SetValue(__instance, 0f);
                 for (int j = 0; j < (LL.GetValue(__instance) as Lobby[]).Length; j++)
                 {
                     GameObject obj = UnityEngine.Object.Instantiate(__instance.LobbySlotPrefab, __instance.levelListContainer);
                     obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, (float)LP.GetValue(__instance));
-                    LP.SetValue(__instance, (float)((float)LP.GetValue(__instance)) - 42f);
+                    LP.SetValue(__instance, (float)(float)LP.GetValue(__instance) - 42f);
                     LobbySlot componentInChildren = obj.GetComponentInChildren<LobbySlot>();
                     componentInChildren.LobbyName.text = (LL.GetValue(__instance) as Lobby[])[j].GetData("name");
                     string text = (LL.GetValue(__instance) as Lobby[])[j].GetData("MaxPlayers");
-                    int number;
                     Debug.Log(text);
-                    if (!(int.TryParse(text, out number)))
+                    if (!int.TryParse(text, out int number))
                     {
                         number = 4;
                     }
@@ -224,11 +222,11 @@ namespace BiggerLobby.Patches
         [HarmonyPostfix]
         public static void ResizeSoundManagerLists(ref SoundManager __instance)
         {
-            __instance. playerVoicePitchLerpSpeed = new float[Plugin.MaxPlayers + 1];
+            __instance.playerVoicePitchLerpSpeed = new float[Plugin.MaxPlayers + 1];
             __instance.playerVoicePitchTargets = new float[Plugin.MaxPlayers + 1];
             __instance.playerVoiceVolumes = new float[Plugin.MaxPlayers + 1];
-            __instance.playerVoicePitches = new float[Plugin.MaxPlayers+1];
-            for (int i = 1; i < Plugin.MaxPlayers+1; i++)
+            __instance.playerVoicePitches = new float[Plugin.MaxPlayers + 1];
+            for (int i = 1; i < Plugin.MaxPlayers + 1; i++)
             {
                 __instance.playerVoicePitchLerpSpeed[i] = 3f;
                 __instance.playerVoicePitchTargets[i] = 1f;
@@ -269,7 +267,7 @@ namespace BiggerLobby.Patches
                 new Type[] { typeof(NetworkObject), typeof(ulong), typeof(bool), typeof(bool), typeof(ulong), typeof(bool) },
                 null
             );
-                instantiating = true;
+            instantiating = true;
             for (int i = 4; i < Plugin.MaxPlayers; i++)
             {
                 nextClientId = i;
@@ -281,7 +279,7 @@ namespace BiggerLobby.Patches
                 Debug.Log("[BiggerLobby] Trying to spawn new player");
                 __instance.allPlayerObjects[i] = newPlayer;
                 __instance.allPlayerScripts[i] = newScript;
-                (typeof(NetworkObject)).GetProperty("NetworkObjectId", BindingFlags.Instance | BindingFlags.Public).SetValue(netObject, (uint)1234567890ul + (ulong)i);
+                typeof(NetworkObject).GetProperty("NetworkObjectId", BindingFlags.Instance | BindingFlags.Public).SetValue(netObject, (uint)1234567890ul + (ulong)i);
                 spawnMethod.Invoke(NetworkManager.Singleton.SpawnManager, new object[]{
                         netObject,
                         1234567890ul + (ulong)i,
@@ -301,40 +299,44 @@ namespace BiggerLobby.Patches
         }
         [HarmonyPatch(typeof(PlayerControllerB), "Update")]
         [HarmonyPrefix]
-
         public static bool ShitAssFix(ref PlayerControllerB __instance)
         {
-            if (__instance.transform.parent.gameObject.name == "HangarShip" && !__instance.disconnectedMidGame && !__instance.isPlayerDead) {
+            if (__instance.transform.parent.gameObject.name == "HangarShip" && !__instance.disconnectedMidGame && !__instance.isPlayerDead)
+            {
                 __instance.isPlayerControlled = true;
             }
-            return (true);
+            return true;
         }
+
         [HarmonyPatch(typeof(QuickMenuManager), "Start")]
         [HarmonyPrefix]
-
         public static bool Fuckyourplayerlist(ref QuickMenuManager __instance)
         {
             __instance.playerListSlots = Helper.ResizeArray(__instance.playerListSlots, Plugin.MaxPlayers);
             for (int i = 4; i < Plugin.MaxPlayers; i++)
             {
-                PlayerListSlot TheBalls = new PlayerListSlot();
-                TheBalls.slotContainer = __instance.playerListSlots[0].slotContainer;
-                TheBalls.volumeSliderContainer = __instance.playerListSlots[0].volumeSliderContainer;
-                TheBalls.KickUserButton = __instance.playerListSlots[0].KickUserButton;
-                TheBalls.isConnected = false;
-                TheBalls.usernameHeader = __instance.playerListSlots[0].usernameHeader;
-                TheBalls.volumeSlider = __instance.playerListSlots[0].volumeSlider;
-                TheBalls.playerSteamId = __instance.playerListSlots[0].playerSteamId;
-                __instance.playerListSlots[i] = TheBalls;
+                PlayerListSlot newSlot = new()
+                {
+                    slotContainer = __instance.playerListSlots[0].slotContainer,
+                    volumeSliderContainer = __instance.playerListSlots[0].volumeSliderContainer,
+                    KickUserButton = __instance.playerListSlots[0].KickUserButton,
+                    isConnected = false,
+                    usernameHeader = __instance.playerListSlots[0].usernameHeader,
+                    volumeSlider = __instance.playerListSlots[0].volumeSlider,
+                    playerSteamId = __instance.playerListSlots[0].playerSteamId
+                };
+                __instance.playerListSlots[i] = newSlot;
             }
             __instance.playerListPanel.SetActive(false);
-            return (true);
+            return true;
         }
+
         [HarmonyPatch(typeof(ManualCameraRenderer), "Awake")]
         [HarmonyPrefix]
-
         public static bool Mawake(ref ManualCameraRenderer __instance)
         {
+            // What does this do? Why does it do? And why does my camera break when the 5th user joins?
+            // I dont know! We don't document our code here!
             for (int i = 0; i < 4; i++)
             {
                 __instance.radarTargets.Add(new TransformAndName(StartOfRound.Instance.allPlayerScripts[i].transform, StartOfRound.Instance.allPlayerScripts[i].playerUsername));
@@ -342,14 +344,13 @@ namespace BiggerLobby.Patches
             __instance.targetTransformIndex = 0;
             __instance.targetedPlayer = StartOfRound.Instance.allPlayerScripts[0];
             return (false);
-        }//I got a glock in my rari
+        }// I got a glock in my rari
 
         [HarmonyPatch(typeof(PlayerControllerB), "Awake")]
         [HarmonyPrefix]
-
         public static bool FixPlayerObject(ref PlayerControllerB __instance)
         {
-            if (!instantiating) return(true);
+            if (!instantiating) return true;
             __instance.gameObject.name = $"ExtraPlayer{nextClientId}";
             __instance.playerClientId = (ulong)nextClientId;
             __instance.actualClientId = (ulong)nextClientId;
@@ -357,7 +358,7 @@ namespace BiggerLobby.Patches
             StartOfRound.Instance.allPlayerObjects[nextClientId] = __instance.transform.parent.gameObject;
             StartOfRound.Instance.allPlayerScripts[nextClientId] = __instance;
             var fields = typeof(PlayerControllerB).GetFields();
-            foreach (FieldInfo field in fields) 
+            foreach (FieldInfo field in fields)
             {
                 var myValue = field.GetValue(__instance);
                 var referenceValue = field.GetValue(referencePlayer);
@@ -365,12 +366,11 @@ namespace BiggerLobby.Patches
                     field.SetValue(__instance, referenceValue);
             }
             __instance.enabled = true;
-            return (true);
+            return true;
         }
 
         [HarmonyPatch(typeof(StartOfRound), "GetPlayerSpawnPosition")]
         [HarmonyTranspiler]
-
         public static IEnumerable<CodeInstruction> GetPlayerSpawnPosition(IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);

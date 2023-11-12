@@ -10,7 +10,7 @@ namespace BiggerLobby
             oldArray.CopyTo(newArray, 0);
             return newArray;
         }
-        public static void ResizeList<T>(this List<T> list, int size, T element = default(T))
+        public static void ResizeList<T>(this List<T> list, int size, T element = default)
         {
             int count = list.Count;
 
